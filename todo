@@ -1,0 +1,34 @@
+------------------------------------------------------------------------------------------------------------
+Deadline : No deadline
+------------------------------------------------------------------------------------------------------------
+Implementation of data structures ----> |
+                                        |
+                                        V
+                                        -- Decide to wheather have string or a Dynamic array and 
+                                        when to instert text into gapbuffer
+Stuff to fix --->
+                |
+                |
+                |
+                v
+				Up and Down arrow keys
+
+Functions Implementations ----> |
+                                |
+                                V
+                                ListenKeys cursor allignment while using keyarrows.
+                                String , pos in TextDatastructure.
+
+Reimplementations to be done ---->
+                                 |
+                                 |
+                                 V
+                                 RenderText once TextDatastructure is implemented.
+                                 RenderText --- one for displaying text while typing.
+                                                another for displaying text while scrolling.
+
+Debug / Check Data Structures ----> |
+                            |
+                            V
+                           deleteText()
+------------------------------------------------------------------------------------------------------------------
