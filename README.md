@@ -14,9 +14,10 @@ If you still want to check it out, you can build the project as follows:
 1. Clone the repository:
    ```bash
     git clone https://github.com/J-A-G-A-N/inkx.git
+    cd inkx
     mkdir build
     cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
+    cmake -DCMAKE_BUILD_TYPE=Release -S ../
     make
     ```
 
