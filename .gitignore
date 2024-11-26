@@ -1,0 +1,9 @@
+# Ignore all .txt files
+*.txt
+
+# Ignore the Zig cache directory
+.zig-cache/
+
+# Ignore the Zig output directory
+zig-out/
+
