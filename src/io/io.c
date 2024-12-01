@@ -1,5 +1,6 @@
 #include "io.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -7,6 +8,8 @@ bool ifspace = 0 ;
 int count = 0;
 char errorbuffer[100];
 uint32_t newline_char_count = 0;
+
+//
 // void reset_curpos(GapBuffer* gb , uint32_t* curx){
 // 	if (count == 0){
 // 		gb->cursor_pos = 0;
@@ -15,9 +18,13 @@ uint32_t newline_char_count = 0;
 //
 // 	}
 // }
+
+
+
 bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dynamic_array*DA, char *filename){
     char c = (char) character;
     switch(character){
+
         case is_ctrl('e'):
             return false;
 
@@ -26,9 +33,7 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
             break;
 
         case KEY_UP:
-            if ((*cury)>0){
-                (*cury)--;
-            }
+            if ((*cury)>0){(*cury)--;}
             break;
             
         case KEY_DOWN:
@@ -39,7 +44,6 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
            if (0 < (*curx) && 0< ((*T)->gb->cursor_pos)){
                 (*curx)-- ; 
                 (*T)->gb->cursor_pos--;
-
            }
 		   break;
 
@@ -47,12 +51,7 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
 				(*curx)++;
 				(*T)->gb->cursor_pos++;
 				break;            
-//          case 32:  // space
-//             (*curx)++;
-//             
-// //            InsertStringGB((*T)->gb,(*T)->string,(*T)->pos);
-//             break;
-//          
+
         case 10:
             (*cury)++;
             (*curx) = 0;
@@ -60,8 +59,17 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
             break;
 
         case KEY_BACKSPACE:
-            if ((*curx != 0 ) && (*T)->gb->cursor_pos > 0){
+			sprintf(errorbuffer,"\n cur y == %d\n",*cury);
+			perrorfile(errorbuffer);
+
+			if (*curx == 0 && *cury != 0 ){
+					(*cury)--;
+			}
+
+			if ((*curx != 0 ) && (*T)->gb->cursor_pos > 0){
+
                 DeleteStringGB((*T)->gb,(*T)->gb->cursor_pos, 1);
+
                 (*T)->gb->cursor_pos--;
                 (*curx)--;
 
@@ -84,6 +92,7 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
     }
 	sprintf(errorbuffer,"\n(curx, cury) = (%d, %d) , cursor position : %d",(*curx), (*cury), (*T)->gb->cursor_pos); 
 	perrorfile(errorbuffer);
+
     move((*cury),(*curx));
     return true ; 
 }
