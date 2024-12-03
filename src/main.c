@@ -12,17 +12,10 @@
 Text* T ;
 int ch = 0 ; 
 int running = 1 ;
-typedef struct{
-	uint32_t curx, cury;
-	uint32_t *cx, *cy; 
-	uint32_t prev_curx , prev_cury;
-	uint32_t *prev_cx, *prev_cy; 
-
-}Cursor;
 
 int main(int argc ,char*argv[]) {
 
-	Cursor cursor; 
+	Cursor cursor ; 
 	cursor.cury = 0;
 	cursor.curx = 0;
 	cursor.cy = &cursor.cury;
@@ -44,7 +37,7 @@ int main(int argc ,char*argv[]) {
 	#endif /* ifdef DEBUG */
 	
     // Loading frame content
-    LoadFile(flname,&T, cursor.cy,cursor.cx);
+    LoadFile(flname,&T,&cursor);
 	
     // Initializing the screen 
     initscr();
@@ -58,7 +51,7 @@ int main(int argc ,char*argv[]) {
     while(running) {
        RenderTextT(T);
        ch = getch();
-       if (ListenKeys(ch, cursor.cy, cursor.cx, &T, DA,argv[1])==false){
+       if (ListenKeys(ch, &cursor, &T, DA,argv[1])==false){
             running = 0;
        }
        refresh();

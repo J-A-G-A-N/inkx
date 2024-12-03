@@ -21,7 +21,11 @@ uint32_t newline_char_count = 0;
 
 
 
-bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dynamic_array*DA, char *filename){
+bool ListenKeys(int character,Cursor *cursor_ptr, Text** T, Dynamic_array*DA, char *filename){
+	cursor_ptr->prev_curx =  cursor_ptr->prev_cury = 0;
+	cursor_ptr->prev_cx = &cursor_ptr->curx; 
+	cursor_ptr->prev_cy = &cursor_ptr->cury;
+
     char c = (char) character;
     switch(character){
 
@@ -33,45 +37,51 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
             break;
 
         case KEY_UP:
-            if ((*cury)>0){(*cury)--;}
+            if (cursor_ptr->curx >0){cursor_ptr->cury--;}
+				//cursor_ptr->prev_cy = &cursor_ptr->cury;
             break;
             
         case KEY_DOWN:
-            (*cury)++;
+			cursor_ptr->prev_cy = &cursor_ptr->cury;
+            cursor_ptr->cury++;
             break;
 
         case KEY_LEFT:
-           if (0 < (*curx) && 0< ((*T)->gb->cursor_pos)){
-                (*curx)-- ; 
+           if (0 < cursor_ptr->curx && 0< ((*T)->gb->cursor_pos)){
+				cursor_ptr->prev_cx = &cursor_ptr->curx;
+                cursor_ptr->curx-- ; 
                 (*T)->gb->cursor_pos--;
            }
 		   break;
 
         case KEY_RIGHT:
-				(*curx)++;
+				cursor_ptr->prev_cx = &cursor_ptr->curx;
+				cursor_ptr->curx++;
 				(*T)->gb->cursor_pos++;
 				break;            
 
         case 10:
-            (*cury)++;
-            (*curx) = 0;
+			cursor_ptr->prev_cy = &cursor_ptr->cury;
+			cursor_ptr->cury++;
+			cursor_ptr->prev_cx = &cursor_ptr->curx;
+            cursor_ptr->curx = 0;
 			InsertStringGB((*T)->gb, "\n",(*T)->gb->cursor_pos);
             break;
 
         case KEY_BACKSPACE:
-			sprintf(errorbuffer,"\n cur y == %d\n",*cury);
+			sprintf(errorbuffer,"\n cur y == %d\n",cursor_ptr->cury);
 			perrorfile(errorbuffer);
-
-			if (*curx == 0 && *cury != 0 ){
-					(*cury)--;
+			
+			if (cursor_ptr->curx == 0 && cursor_ptr->cury != 0 ){
+					cursor_ptr->cury--;
 			}
 
-			if ((*curx != 0 ) && (*T)->gb->cursor_pos > 0){
+			if ((cursor_ptr->curx != 0 ) && (*T)->gb->cursor_pos > 0){
 
                 DeleteStringGB((*T)->gb,(*T)->gb->cursor_pos, 1);
 
                 (*T)->gb->cursor_pos--;
-                (*curx)--;
+                cursor_ptr->curx--;
 
 				break;
             }
@@ -80,25 +90,25 @@ bool ListenKeys(int character, uint32_t (*cury), uint32_t (*curx), Text** T, Dyn
             break;
 
         case KEY_STAB:
-        //     (*curx) +=4 ;
+        //     cursor_ptr->curx +=4 ;
         //     break;
         
         default:
             //(*T)->string[(*T)->index] = c ; 
 			//reset_curpos((*T)->gb, curx);
             InsertStringGB((*T)->gb,&c,(*T)->gb->cursor_pos);
-            (*curx)++;
+            cursor_ptr->curx++;
             break;
     }
-	sprintf(errorbuffer,"\n(curx, cury) = (%d, %d) , cursor position : %d",(*curx), (*cury), (*T)->gb->cursor_pos); 
+	sprintf(errorbuffer,"\n(curx, cury) = (%d, %d) , cursor position : %d",cursor_ptr->curx, cursor_ptr->cury, (*T)->gb->cursor_pos); 
 	perrorfile(errorbuffer);
 
-    move((*cury),(*curx));
+    move(cursor_ptr->cury,cursor_ptr->curx);
     return true ; 
 }
 
 
-bool LoadFile(char * filename , Text** T, uint32_t* cury, uint32_t* curx) {
+bool LoadFile(char * filename , Text** T, Cursor *cursor_ptr) {
   FILE *file;
   int filesize;
 
@@ -132,7 +142,7 @@ bool LoadFile(char * filename , Text** T, uint32_t* cury, uint32_t* curx) {
   while (fgets(temp, sizeof(temp), file)) {
     InsertStringGB((*T)->gb, temp, cursor_pos);
 	uint32_t stringlength = strlen(temp);
-	*(curx) = stringlength ; 
+	cursor_ptr->curx = stringlength ; 
     cursor_pos += stringlength;
   }
     free(temp); 
