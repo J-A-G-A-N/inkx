@@ -5,16 +5,14 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-
 #define DEBUG
 
-
 Text* T ;
-int ch = 0 ; 
 int running = 1 ;
 
 int main(int argc ,char*argv[]) {
 
+	int ch = 0 ; 
 	Cursor cursor ; 
 	cursor.cury = 0;
 	cursor.curx = 0;

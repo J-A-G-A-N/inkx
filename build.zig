@@ -39,7 +39,7 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(exe);
 
-   // Create run step
+    // Create run step
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
 
@@ -50,14 +50,9 @@ pub fn build(b: *std.Build) void {
         run_cmd.addArgs(args);
     }
     //run_cmd.addArgs(&[_][]const u8{"arg1"});
-   
+
     // Clean step
     const clean_step = b.step("clean", "Clean build artifacts");
     clean_step.dependOn(&b.addRemoveDirTree("zig-out").step);
     clean_step.dependOn(&b.addRemoveDirTree("zig-cache").step);
-
-
-
-
-    
 }

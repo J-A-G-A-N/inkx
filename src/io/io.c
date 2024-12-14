@@ -56,8 +56,8 @@ bool ListenKeys(int character,Cursor *cursor_ptr, Text** T, Dynamic_array*DA, ch
 
         case KEY_RIGHT:
 				cursor_ptr->prev_cx = &cursor_ptr->curx;
-				cursor_ptr->curx++;
 				(*T)->gb->cursor_pos++;
+				cursor_ptr->curx++;
 				break;            
 
         case 10:

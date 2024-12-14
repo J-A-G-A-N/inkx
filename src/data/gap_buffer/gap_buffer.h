@@ -1,7 +1,7 @@
 #ifndef GAP_BUFFER_H_
 #define GAP_BUFFER_H_
 #include <stdlib.h>
-#include "../../ferror.h"
+#include "../../ferror/ferror.h"
 #define GAP_CHARACTER '\0'
 
 typedef struct {
