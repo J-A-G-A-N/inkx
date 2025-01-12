@@ -17,9 +17,9 @@ pub fn build(b: *std.Build) void {
         "-ffast-math",
     };
 
-    const c_sources = [_][]const u8{
+    const c_sources = &[_][]const u8{
         "src/main.c",
-        "src/ferror.c",
+        "src/ferror/ferror.c",
         "src/io/io.c",
         "src/io/render_txt.c",
         "src/data/gap_buffer/gap_buffer.c",
@@ -28,12 +28,10 @@ pub fn build(b: *std.Build) void {
         // Add more C source files here as needed
     };
 
-    for (c_sources) |src| {
-        exe.addCSourceFile(.{
-            .file = b.path(src),
-            .flags = flags,
-        });
-    }
+    exe.addCSourceFiles(.{
+        .files = c_sources,
+        .flags = flags,
+    });
     exe.linkLibC();
     exe.linkSystemLibrary("ncurses");
 

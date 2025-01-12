@@ -7,11 +7,13 @@
 
 #define DEBUG
 
+int term_rows , term_cols;
+
 Text* T ;
 int running = 1 ;
 
 int main(int argc ,char*argv[]) {
-
+	getmaxyx(stdscr, term_rows, term_cols);
 	int ch = 0 ; 
 	Cursor cursor ; 
 	cursor.cury = 0;
@@ -27,7 +29,7 @@ int main(int argc ,char*argv[]) {
     if (argc > 1){
         strcpy(flname,argv[1]);
      }
-	
+
 	#ifdef DEBUG
 		// Clear the file 
 		clearfile();
@@ -47,7 +49,7 @@ int main(int argc ,char*argv[]) {
 
 	// State Loop.
     while(running) {
-       RenderTextT(T);
+       RenderTextT(T, term_rows, term_cols);
        ch = getch();
        if (ListenKeys(ch, &cursor, &T, DA,argv[1])==false){
             running = 0;
@@ -58,7 +60,7 @@ int main(int argc ,char*argv[]) {
 	// Close the stdscr and deallocate heap memory.
     endwin();
     DestroyText(T);
-	DestroyDA(DA);
+		DestroyDA(DA);
 
 
 	return 0;
