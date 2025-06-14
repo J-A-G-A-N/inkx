@@ -25,7 +25,6 @@ pub fn build(b: *std.Build) void {
         "src/data/gap_buffer/gap_buffer.c",
         "src/data/text_struct/text_struct.c",
         "src/data/dynamic_array/dynamicarray.c",
-        // Add more C source files here as needed
     };
 
     exe.addCSourceFiles(.{
@@ -51,6 +50,6 @@ pub fn build(b: *std.Build) void {
 
     // Clean step
     const clean_step = b.step("clean", "Clean build artifacts");
-    clean_step.dependOn(&b.addRemoveDirTree("zig-out").step);
-    clean_step.dependOn(&b.addRemoveDirTree("zig-cache").step);
+    clean_step.dependOn(&b.addRemoveDirTree(b.path("zig-out")).step);
+    clean_step.dependOn(&b.addRemoveDirTree(b.path("zig-cache")).step);
 }
