@@ -5,41 +5,64 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-uint32_t curx = 0 , cury = 0 ;
+#define DEBUG
+
+int term_rows , term_cols;
+
 Text* T ;
-uint32_t *cx = &curx , *cy = &cury; 
-int ch = 0 ; 
 int running = 1 ;
 
 int main(int argc ,char*argv[]) {
+	getmaxyx(stdscr, term_rows, term_cols);
+	int ch = 0 ; 
+	Cursor cursor ; 
+	cursor.cury = 0;
+	cursor.curx = 0;
+	cursor.cy = &cursor.cury;
+	cursor.cx = &cursor.curx;
+
+	// Initializing the Dynamic Array
 	Dynamic_array* DA = CreateDA(1);
+
+	// Set up the file name
 	char flname[100];
     if (argc > 1){
         strcpy(flname,argv[1]);
      }
-	clearfile();
+
+	#ifdef DEBUG
+		// Clear the file 
+		clearfile();
+
+	#endif /* ifdef DEBUG */
+	
     // Loading frame content
-    LoadFile(flname,&T, cy,cx);
-	//T->gb->cursor_pos = 0;
+    LoadFile(flname,&T,&cursor);
+	
     // Initializing the screen 
     initscr();
     cbreak();
     noecho();
     keypad(stdscr,TRUE);
-
     refresh();
 
+
+	// State Loop.
     while(running) {
-       RenderTextT(T);
+       RenderTextT(T, term_rows, term_cols);
        ch = getch();
-       if (ListenKeys(ch, cy, cx, &T, DA,argv[1])==false){
+       if (ListenKeys(ch, &cursor, &T, DA,argv[1])==false){
             running = 0;
        }
        refresh();
     }
+
+	// Close the stdscr and deallocate heap memory.
     endwin();
     DestroyText(T);
-	DestroyDA(DA);
-     return 0;
+		DestroyDA(DA);
+
+
+	return 0;
 }
 

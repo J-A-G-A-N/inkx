@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define FERROR
 
 GapBuffer *InitGapBuffer(size_t init_size ) {
     if (init_size==0){
@@ -12,13 +13,17 @@ GapBuffer *InitGapBuffer(size_t init_size ) {
   GapBuffer *gap_buffer = (GapBuffer *)malloc(sizeof(GapBuffer));
   if (!gap_buffer) {
     fprintf(stderr, "Failed to allocate memory for gap_buffer");
+#ifdef FERROR
 	perrorfile("Failed to allocate memory for gap_buffer");
+#endif /* ifdef FERROR */
     exit(1);
   }
   gap_buffer->buffer = (char *)malloc(sizeof(char) * init_size);
   if (!gap_buffer->buffer) {
     fprintf(stderr, "Failed to allocate memory for buffer");
+#ifdef FERROR
 	perrorfile("Failed to allocate memory for buffer");
+#endif /* ifdef FERROR */
     exit(1);
   }
   gap_buffer->gap_start = 0;
@@ -48,7 +53,9 @@ int GapBufferGrow(GapBuffer *gap_buffer, size_t inc_size) {
       realloc(gap_buffer->buffer, sizeof(char) * gap_buffer->buffer_size);
   if (!gap_buffer->buffer) {
     fprintf(stderr,"failed to reallocate memory for gap_buffer");
+#ifdef FERROR
 	perrorfile("failed to reallocate memory for gap_buffer");
+#endif /* ifdef FERROR */
     free(temp);
     exit(1);
   }
